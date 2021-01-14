@@ -13,6 +13,7 @@ const (
 	INFO       = "INFO"
 	WARN       = "WARN"
 	ERROR      = "ERROR"
+	EXIT       = "EXIT"
 	DATEFORMAT = "2006-01-02 15:04:05"
 )
 
@@ -134,4 +135,28 @@ func (c *Log) Errorf(format string, v ...interface{}) {
 func Errorf(format string, v ...interface{}) {
 	logger.SetPrefix(ERROR)
 	logger.Output(fmt.Sprintf(format, v...))
+}
+
+func Fatal(v ...interface{}) {
+	logger.SetPrefix(EXIT)
+	logger.Output(fmt.Sprintln(v...))
+	os.Exit(1)
+}
+
+func (c *Log) Fatal(v ...interface{}) {
+	c.SetPrefix(EXIT)
+	c.Output(fmt.Sprintln(v...))
+	os.Exit(1)
+}
+
+func Fatalf(format string, v ...interface{}) {
+	logger.SetPrefix(EXIT)
+	logger.Output(fmt.Sprintf(format, v...))
+	os.Exit(1)
+}
+
+func (c *Log) Fatalf(format string, v ...interface{}) {
+	c.SetPrefix(EXIT)
+	c.Output(fmt.Sprintf(format, v...))
+	os.Exit(1)
 }
