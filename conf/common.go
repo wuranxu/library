@@ -2,15 +2,10 @@ package conf
 
 import (
 	rds "github.com/go-redis/redis"
-	"github.com/wuranxu/library/log"
-	"sync"
 	"time"
 )
 
-var (
-	once sync.Once
-	Conf = new(Config)
-)
+var Conf = new(Config)
 
 type EtcdConfig struct {
 	Endpoints   []string      `json:"endpoints"`
@@ -36,13 +31,13 @@ type Md struct {
 	NoAuth bool `yaml:"no_auth"`
 }
 
-func Init(file string) {
-	log.Info("本机环境: ", DEFAULTENV)
-	var err error
-	once.Do(func() {
-		err = ParseConfig(file, Conf, DEFAULTENV)
-		if err != nil {
-			log.Fatalf("获取配置出错, error: %v", err)
-		}
-	})
-}
+//func Init(file string) {
+//	log.Info("本机环境: ", DEFAULTENV)
+//	var err error
+//	once.Do(func() {
+//		err = ParseConfig(file, Conf, DEFAULTENV)
+//		if err != nil {
+//			log.Fatalf("获取配置出错, error: %v", err)
+//		}
+//	})
+//}
