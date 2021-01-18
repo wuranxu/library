@@ -2,7 +2,7 @@ package conf
 
 import (
 	rds "github.com/go-redis/redis"
-	"github.com/prometheus/common/log"
+	"github.com/wuranxu/library/log"
 	"sync"
 	"time"
 )
@@ -37,7 +37,7 @@ type Md struct {
 }
 
 func Init(file string) {
-	log.Infoln("本机环境: ", DEFAULTENV)
+	log.Info("本机环境: ", DEFAULTENV)
 	var err error
 	once.Do(func() {
 		err = ParseConfig(file, Conf, DEFAULTENV)
