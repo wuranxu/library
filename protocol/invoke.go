@@ -31,6 +31,20 @@ type GrpcClient struct {
 	method etcd.Method
 }
 
+func (c *GrpcClient) InvokeWithoutTimeout(in *Request, ip string, userInfo *auth.CustomClaims, opts ...grpc.CallOption) (*Response, error) {
+	out := new(Response)
+	md := metadata.New(map[string]string{"host": ip})
+	if userInfo != nil {
+		md.Append("user", userInfo.Marshal())
+	}
+	ctx := context.Background()
+	ctx = metadata.NewOutgoingContext(ctx, md)
+	if err := c.cc.Invoke(ctx, c.method.Path, in, out, opts...); err != nil {
+		return out, err
+	}
+	return out, nil
+}
+
 func (c *GrpcClient) Invoke(in *Request, ip string, userInfo *auth.CustomClaims, opts ...grpc.CallOption) (*Response, error) {
 	out := new(Response)
 	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)

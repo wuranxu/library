@@ -3,7 +3,7 @@ syntax = "proto3";
 
 package protocol;
 
-option go_package = "library/protocol";
+option go_package = "github.com/wuranxu/library/protocol";
 
 //import "google/protobuf/any.proto";
 
