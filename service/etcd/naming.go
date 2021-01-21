@@ -71,3 +71,21 @@ func (cl *Client) RegisterApi(name string, data interface{}, config conf.YamlCon
 	}
 	return nil
 }
+
+// 注销方法
+func (cl *Client) UnRegisterApi(name string, data interface{}, config conf.YamlConfig) error {
+	inf := reflect.ValueOf(data)
+	for i := 0; i < inf.NumMethod(); i++ {
+		methodName := inf.Type().Method(i).Name
+		_, ok := config.Method[methodName]
+		if !ok {
+			// 说明配置文件没有包含此方法
+			log.Fatal("注册Api失败, service.yaml文件未包含此方法: ", methodName)
+		}
+		err := UnRegisterMethod(cl, config.Version, name, methodName)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}

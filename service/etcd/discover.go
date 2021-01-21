@@ -35,3 +35,9 @@ func RegisterMethod(client *Client, version, service, method string, auth bool) 
 	}
 	return nil
 }
+
+func UnRegisterMethod(client *Client, version, service, method string) error {
+	fullPath := fmt.Sprintf("%s.%s.%s", version, lowerFirst(service), lowerFirst(method))
+	_, err := client.cli.Delete(client.cli.Ctx(), fullPath)
+	return err
+}

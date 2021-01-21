@@ -47,7 +47,7 @@ func (c *GrpcClient) InvokeWithoutTimeout(in *Request, ip string, userInfo *auth
 
 func (c *GrpcClient) Invoke(in *Request, ip string, userInfo *auth.CustomClaims, opts ...grpc.CallOption) (*Response, error) {
 	out := new(Response)
-	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 	md := metadata.New(map[string]string{"host": ip})
 	if userInfo != nil {
