@@ -35,13 +35,14 @@ func (c *GrpcClient) GetConn() *grpc.ClientConn {
 	return c.cc
 }
 
-func (c *GrpcClient) InvokeWithoutTimeout(in *Request, ip string, userInfo *auth.CustomClaims, opts ...grpc.CallOption) (*Response, error) {
+func (c *GrpcClient) InvokeWithTimeout(in *Request, ip string, userInfo *auth.CustomClaims, timeout time.Duration, opts ...grpc.CallOption) (*Response, error) {
 	out := new(Response)
 	md := metadata.New(map[string]string{"host": ip})
 	if userInfo != nil {
 		md.Append("user", userInfo.Marshal())
 	}
-	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
 	ctx = metadata.NewOutgoingContext(ctx, md)
 	if err := c.cc.Invoke(ctx, c.method.Path, in, out, opts...); err != nil {
 		return out, err
