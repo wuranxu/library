@@ -31,6 +31,10 @@ type GrpcClient struct {
 	method etcd.Method
 }
 
+func (c *GrpcClient) GetConn() *grpc.ClientConn {
+	return c.cc
+}
+
 func (c *GrpcClient) InvokeWithoutTimeout(in *Request, ip string, userInfo *auth.CustomClaims, opts ...grpc.CallOption) (*Response, error) {
 	out := new(Response)
 	md := metadata.New(map[string]string{"host": ip})
