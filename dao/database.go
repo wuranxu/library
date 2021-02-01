@@ -31,7 +31,7 @@ func NewConnect(cfg conf.SqlConfig) (cur *Cursor, err error) {
 	switch cfg.Name {
 	case "postgres":
 		// postgres sql
-		args = fmt.Sprintf("host=%s port=%d user=%s dbname=%s password=%s",
+		args = fmt.Sprintf("host=%s port=%d user=%s dbname=%s password=%s sslmode=disable",
 			cfg.Host, cfg.Port, cfg.Username, cfg.Database, cfg.Password)
 		like = "ilike"
 	case "mysql":
