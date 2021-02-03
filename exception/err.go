@@ -11,3 +11,7 @@ func (e ErrString) New(s interface{}) ErrString {
 func (e ErrString) Error() string {
 	return string(e)
 }
+
+func Error(err error, s interface{}) string {
+	return fmt.Sprintf("%v, error: %v", err, s)
+}
