@@ -56,24 +56,24 @@ type Cursor struct {
 
 func (c *Cursor) Like(field, name string) *Cursor {
 	c.DB.Error = nil
-	c.DB = c.Where(fmt.Sprintf("%s %s '%%%s%%'", field, c.like, name))
+	c.DB = c.New().Where(fmt.Sprintf("%s %s '%%%s%%'", field, c.like, name))
 	return c
 }
 
 func (c *Cursor) Llike(field, name string) *Cursor {
 	c.DB.Error = nil
-	c.DB = c.Where(fmt.Sprintf("%s %s '%%%s'", field, c.like, name))
+	c.DB = c.New().Where(fmt.Sprintf("%s %s '%%%s'", field, c.like, name))
 	return c
 }
 func (c *Cursor) Rlike(field, name string) *Cursor {
 	c.DB.Error = nil
-	c.DB = c.Where(fmt.Sprintf("%s %s '%s%%'", field, c.like, name))
+	c.DB = c.New().Where(fmt.Sprintf("%s %s '%s%%'", field, c.like, name))
 	return c
 }
 
 func (c *Cursor) Find(out interface{}, where ...interface{}) *Cursor {
 	c.DB.Error = nil
-	c.DB = c.DB.Find(out, where...)
+	c.DB = c.New().Find(out, where...)
 	return c
 }
 
@@ -87,38 +87,38 @@ func (c *Cursor) FindPagination(page, pageSize int, out interface{}, where ...in
 func (c *Cursor) FindPaginationAndOrder(page, pageSize int, order string, out interface{}, where ...interface{}) (int, error) {
 	var total int
 	c.DB.Error = nil
-	c.DB = c.Find(out, where...).Count(&total)
+	c.DB = c.New().Find(out, where...).Count(&total)
 	err := c.Page(page, pageSize).Order(order).Error
 	return total, err
 }
 
 func (c *Cursor) Table(name string) *Cursor {
 	c.DB.Error = nil
-	c.DB = c.DB.Table(name)
+	c.DB = c.New().Table(name)
 	return c
 }
 
 func (c *Cursor) Select(query interface{}, args ...interface{}) *Cursor {
 	c.DB.Error = nil
-	c.DB = c.DB.Select(query, args...)
+	c.DB = c.New().Select(query, args...)
 	return c
 }
 
 func (c *Cursor) Sql(v interface{}, sql string, params ...interface{}) error {
 	c.DB.Error = nil
-	c.DB = c.Raw(sql, params...).Scan(v)
+	c.DB = c.New().Raw(sql, params...).Scan(v)
 	return c.DB.Error
 }
 
 func (c *Cursor) Insert(v interface{}) error {
 	c.DB.Error = nil
-	c.DB = c.DB.Create(v)
+	c.DB = c.New().Create(v)
 	return c.DB.Error
 }
 
 func (c *Cursor) Delete(v interface{}, where ...interface{}) error {
 	c.DB.Error = nil
-	c.DB = c.DB.Delete(v, where...)
+	c.DB = c.New().Delete(v, where...)
 	return c.Error
 }
 
@@ -131,7 +131,7 @@ func (c *Cursor) Updates(v interface{}, attrs ...interface{}) (int64, error) {
 		switch to := attrs[0].(type) {
 		// receive map and struct
 		case Columns:
-			c.DB = c.DB.Model(v).Updates(to)
+			c.DB = c.New().Model(v).Updates(to)
 		default:
 			var dist string
 			vType := reflect.ValueOf(v).Elem().Type().String()
@@ -144,16 +144,16 @@ func (c *Cursor) Updates(v interface{}, attrs ...interface{}) (int64, error) {
 			if dist != vType {
 				return 0, StructError
 			}
-			c.DB = c.DB.Model(v).Updates(to)
+			c.DB = c.New().Model(v).Updates(to)
 		}
 	default:
-		c.DB = c.DB.Model(v).Update(attrs...)
+		c.DB = c.New().Model(v).Update(attrs...)
 	}
 	return c.DB.RowsAffected, c.DB.Error
 }
 
 func (c *Cursor) Page(current, pageSize int) *Cursor {
 	c.DB.Error = nil
-	c.DB = c.Offset((current - 1) * pageSize).Limit(pageSize)
+	c.DB = c.New().Offset((current - 1) * pageSize).Limit(pageSize)
 	return c
 }
