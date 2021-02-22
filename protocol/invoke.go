@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"github.com/wuranxu/library/auth"
 	"github.com/wuranxu/library/conf"
-	logger "github.com/wuranxu/library/log"
+	"log"
 	"github.com/wuranxu/library/service/etcd"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
@@ -17,7 +17,7 @@ import (
 
 var (
 	MethodNotFound = errors.New("没有找到对应的方法，请检查您的参数")
-	log            = logger.InitLogger("logs/invoke.log")
+	//log            = logger.InitLogger("logs/invoke.log")
 	invokeConfig   = `{
 	  "loadBalancingConfig": [ { "round_robin": {} } ],
 	  "methodConfig": []
@@ -80,7 +80,7 @@ func (c *GrpcClient) getCallAddr(version, service, method string) (etcd.Method, 
 	var md etcd.Method
 	addr := c.cli.GetSingle(fmt.Sprintf("%s.%s.%s", version, service, method))
 	if addr == "" {
-		log.Errorf("版本:[%s] 服务:[%s] 方法:[%s]未找到", version, service, method)
+		log.Printf("版本:[%s] 服务:[%s] 方法:[%s]未找到", version, service, method)
 		return md, MethodNotFound
 	}
 	if err := json.Unmarshal([]byte(addr), &md); err != nil {
