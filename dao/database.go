@@ -122,6 +122,12 @@ func (c *Cursor) Delete(v interface{}, where ...interface{}) error {
 	return c.Error
 }
 
+func (c *Cursor) Save(v interface{}) error {
+	c.DB.Error = nil
+	c.DB = c.New().Save(v)
+	return c.Error
+}
+
 func (c *Cursor) Updates(v interface{}, attrs ...interface{}) (int64, error) {
 	c.DB.Error = nil
 	switch len(attrs) {
