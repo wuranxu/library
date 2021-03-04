@@ -18,7 +18,7 @@ var (
 func Success(data ...interface{}) *Response {
 	res := &Response{Code: 0, Msg: "操作成功"}
 	if len(data) > 0 {
-		bt, err := json.Marshal(data)
+		bt, err := json.Marshal(data[0])
 		if err != nil {
 			res.Msg = err.Error()
 			res.Code = 101
@@ -26,6 +26,12 @@ func Success(data ...interface{}) *Response {
 		}
 		res.ResultJson = bt
 	}
+	return res
+}
+
+func SuccessWithMsg(msg string, data ...interface{}) *Response {
+	res := Success(data...)
+	res.Msg = msg
 	return res
 }
 
@@ -47,7 +53,7 @@ func (m *Response) Build(code int32, msg interface{}, data ...interface{}) *Resp
 		}
 	}
 	if len(data) > 0 {
-		bt, err := json.Marshal(data)
+		bt, err := json.Marshal(data[0])
 		if err != nil {
 			m.Msg = err.Error()
 		}
