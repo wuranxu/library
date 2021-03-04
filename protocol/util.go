@@ -15,6 +15,25 @@ var (
 	DecodeError        = "解析返回数据失败"
 )
 
+func Success(data ...interface{}) *Response {
+	res := &Response{Code: 0, Msg: "操作成功"}
+	if len(data) > 0 {
+		bt, err := json.Marshal(data)
+		if err != nil {
+			res.Msg = err.Error()
+			res.Code = 101
+			return res
+		}
+		res.ResultJson = bt
+	}
+	return res
+}
+
+func Error(code int32, msg interface{}, data ...interface{}) *Response {
+	r := new(Response)
+	return r.Build(code, msg, data...)
+}
+
 func (m *Response) Build(code int32, msg interface{}, data ...interface{}) *Response {
 	m.Code = code
 	if msg != nil {
